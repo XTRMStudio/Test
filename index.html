@@ -6,57 +6,64 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>BlockWorld Multiplayer</title>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <title>BlockWorld TDM</title>
+  <link rel="stylesheet" href="style.css?v=4" />
   <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
-    }
-  }
+  {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}
   </script>
   <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
 </head>
 <body>
   <div id="menu" class="panel">
-    <h1>BlockWorld</h1>
-    <p>A small multiplayer block-building game.</p>
-    <label>Player name<input id="playerName" maxlength="16" value="Builder" /></label>
+    <h1>BlockWorld TDM</h1>
+    <p>Pixel combat, teams and block-built maps.</p>
+    <label>Player name<input id="playerName" maxlength="16" value="Player" /></label>
     <div class="menu-buttons">
-      <button id="soloBtn">Play solo</button>
-      <button id="hostBtn">Create room</button>
+      <button id="soloBtn">Training world</button>
+      <button id="hostBtn">Create match</button>
     </div>
     <div class="join-row">
       <input id="roomInput" maxlength="36" placeholder="Room code" />
-      <button id="joinBtn">Join room</button>
+      <button id="joinBtn">Join match</button>
     </div>
     <p id="menuStatus" class="status"></p>
-    <small>Desktop: WASD, Space, mouse. Left click breaks, right click places, 1–5 changes block.</small>
+    <small>Desktop: WASD, Space, mouse. Left click shoots. Press B for build mode, then left/right click to break/place blocks.</small>
   </div>
 
   <div id="hud" class="hidden">
-    <div id="roomBadge">Solo</div>
+    <div id="matchBar">
+      <span id="blueScore">BLUE 0</span>
+      <span id="timer">05:00</span>
+      <span id="redScore">RED 0</span>
+    </div>
+    <div id="roomBadge">Training</div>
     <div id="playersBadge">Players: 1</div>
+    <div id="teamBadge">BLUE TEAM</div>
     <div id="crosshair">+</div>
-    <div id="hotbar"></div>
+    <div id="hitmarker">×</div>
+    <div id="hpWrap"><div id="hpText">HP 100</div><div id="hpTrack"><div id="hpFill"></div></div></div>
+    <div id="ammo">12 / 12</div>
+    <div id="modeBadge">COMBAT</div>
+    <div id="hotbar" class="hidden"></div>
     <div id="desktopHint" class="hidden">Click the game to capture the mouse</div>
   </div>
 
   <div id="mobile" class="hidden">
-    <div id="lookZone" aria-label="Drag here to turn"></div>
-    <div id="lookHint">Drag right side to look</div>
-    <button id="fullscreenBtn" type="button">Fullscreen</button>
+    <div id="lookZone" aria-label="Drag to look"></div>
+    <button id="fullscreenBtn" type="button">⛶</button>
     <div id="joystick"><div id="stick"></div></div>
     <div class="mobile-actions">
       <button id="jumpBtn">Jump</button>
-      <button id="breakBtn">Break</button>
-      <button id="placeBtn">Place</button>
+      <button id="shootBtn" class="shoot">Shoot</button>
+      <button id="modeBtn">Build</button>
+      <button id="breakBtn" class="build-only hidden">Break</button>
+      <button id="placeBtn" class="build-only hidden">Place</button>
     </div>
   </div>
 
+  <div id="roundMessage" class="hidden"></div>
   <div id="toast"></div>
   <canvas id="game"></canvas>
-  <script type="module" src="game.js?v=3"></script>
+  <script type="module" src="game.js?v=4"></script>
 </body>
 </html>

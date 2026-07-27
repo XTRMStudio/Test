@@ -1,31 +1,18 @@
-# BlockWorld Multiplayer
+# BlockWorld TDM
 
-A small Minecraft-style browser game that can be hosted on GitHub Pages.
+GitHub Pages-ready multiplayer voxel team-deathmatch prototype.
 
 ## Features
-- First-person movement
-- Break and place five block types
-- Generated block world
-- Solo mode
-- Multiplayer room codes with PeerJS/WebRTC
-- Basic mobile controls
+- Blue versus Red teams
+- First team to 150 points wins
+- Five-minute match timer
+- Pixel gun, health, ammo, damage, eliminations and respawning
+- Smooth drag camera controls on mobile
+- Combat and Build modes
+- Shared multiplayer block edits using PeerJS/WebRTC
 
-## Publish on GitHub Pages
-1. Create a new public GitHub repository.
-2. Upload `index.html`, `style.css`, and `game.js` to the repository root.
-3. Open **Settings → Pages**.
-4. Under **Build and deployment**, select **Deploy from a branch**.
-5. Select the `main` branch and `/ (root)`, then save.
-6. Open the Pages address GitHub provides.
+## Publish
+Upload `index.html`, `style.css` and `game.js` to a GitHub repository, then enable GitHub Pages from the repository root.
 
-## Multiplayer model
-GitHub Pages only serves static files, so this starter uses PeerJS/WebRTC. One player creates the room and acts as the world host. The room ends when the host closes the page. This version does not have accounts, a database, permanent worlds, anti-cheat, enemies, crafting, or dedicated servers.
-
-## Controls
-- WASD: move
-- Space: jump
-- Shift: sprint
-- Mouse: look
-- Left click: break block
-- Right click: place block
-- 1–5: select block
+## Current hosting limitation
+GitHub Pages is static hosting. Multiplayer uses browser-to-browser WebRTC and the room creator is the match host. A future dedicated backend will be needed for permanent maps, accounts, anti-cheat, matchmaking and always-online servers.
