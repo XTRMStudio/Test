@@ -1,11 +1,12 @@
 :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; }
-* { box-sizing: border-box; }
-html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #87c9ff; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; width: 100%; height: 100%; min-height: 100%; overflow: hidden; background: #87c9ff; overscroll-behavior: none; }
+body { position: fixed; inset: 0; width: 100dvw; height: 100dvh; touch-action: none; }
 button, input { font: inherit; }
-canvas { display: block; width: 100%; height: 100%; }
+canvas { position: fixed; inset: 0; display: block; width: 100dvw; height: 100dvh; }
 .hidden { display: none !important; }
 .panel {
-  position: fixed; z-index: 20; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  position: fixed; z-index: 30; left: 50%; top: 50%; transform: translate(-50%, -50%);
   width: min(92vw, 430px); padding: 24px; border-radius: 18px;
   background: rgba(15, 23, 42, .94); border: 1px solid rgba(255,255,255,.14);
   box-shadow: 0 20px 80px rgba(0,0,0,.45); text-align: center;
@@ -14,35 +15,52 @@ h1 { margin: 0 0 6px; font-size: 38px; }
 .panel p { color: #cbd5e1; }
 label { display: block; text-align: left; color: #cbd5e1; margin: 16px 0 8px; }
 input { width: 100%; padding: 12px 14px; margin-top: 6px; border: 1px solid #475569; border-radius: 10px; background: #0f172a; color: white; }
-button { border: 0; border-radius: 10px; padding: 12px 16px; background: #22c55e; color: #052e16; font-weight: 800; cursor: pointer; }
+button { border: 0; border-radius: 10px; padding: 12px 16px; background: #22c55e; color: #052e16; font-weight: 800; cursor: pointer; touch-action: manipulation; }
 button:hover { filter: brightness(1.08); }
 .menu-buttons, .join-row { display: flex; gap: 10px; margin-top: 12px; }
 .menu-buttons button { flex: 1; }
 .join-row input { margin: 0; }
 .status { min-height: 22px; color: #fbbf24 !important; }
 small { display: block; color: #94a3b8; line-height: 1.45; margin-top: 14px; }
-#hud { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
-#roomBadge, #playersBadge { position: absolute; top: 12px; padding: 9px 12px; border-radius: 9px; background: rgba(15,23,42,.78); }
-#roomBadge { left: 12px; }
-#playersBadge { right: 12px; }
+#hud { position: fixed; inset: 0; z-index: 20; pointer-events: none; }
+#roomBadge, #playersBadge { position: absolute; top: max(12px, env(safe-area-inset-top)); padding: 9px 12px; border-radius: 9px; background: rgba(15,23,42,.78); }
+#roomBadge { left: max(12px, env(safe-area-inset-left)); }
+#playersBadge { right: max(12px, env(safe-area-inset-right)); }
 #crosshair { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font: 28px/1 monospace; text-shadow: 0 1px 4px black; }
 #desktopHint { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); padding: 10px 14px; border-radius: 9px; background: rgba(15,23,42,.82); color: white; pointer-events: none; }
-#hotbar { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 7px; }
-.slot { width: 54px; height: 54px; border: 3px solid rgba(255,255,255,.55); border-radius: 8px; background: rgba(15,23,42,.75); display: grid; place-items: center; font-weight: 900; }
-.slot.selected { border-color: white; transform: translateY(-5px); }
-.swatch { width: 30px; height: 30px; border: 2px solid rgba(0,0,0,.35); }
-#toast { position: fixed; z-index: 30; top: 70px; left: 50%; transform: translateX(-50%); padding: 10px 14px; background: rgba(15,23,42,.9); border-radius: 9px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+#hotbar { position: absolute; z-index: 25; bottom: max(18px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: flex; gap: 7px; pointer-events: auto; touch-action: manipulation; }
+.slot { appearance: none; padding: 0; width: 54px; height: 54px; border: 3px solid rgba(255,255,255,.55); border-radius: 8px; background: rgba(15,23,42,.75); display: grid; place-items: center; }
+.slot.selected { border-color: white; transform: translateY(-5px); box-shadow: 0 0 0 2px rgba(255,255,255,.35); }
+.swatch { width: 30px; height: 30px; border: 2px solid rgba(0,0,0,.35); pointer-events: none; }
+#toast { position: fixed; z-index: 40; top: calc(max(70px, env(safe-area-inset-top)) + 6px); left: 50%; transform: translateX(-50%); padding: 10px 14px; background: rgba(15,23,42,.9); border-radius: 9px; opacity: 0; transition: opacity .2s; pointer-events: none; }
 #toast.show { opacity: 1; }
-#mobile { position: fixed; z-index: 11; inset: 0; pointer-events: none; }
-#lookZone { position: absolute; z-index: 1; right: 0; top: 0; width: 58%; height: 100%; pointer-events: auto; touch-action: none; }
-#lookHint { position: absolute; z-index: 2; right: 20px; top: 50%; transform: translateY(-50%); padding: 8px 11px; border-radius: 9px; background: rgba(15,23,42,.55); color: rgba(255,255,255,.9); font-size: 13px; pointer-events: none; }
-#joystick { position: absolute; z-index: 3; left: 22px; bottom: 26px; width: 120px; height: 120px; border-radius: 50%; background: rgba(15,23,42,.38); border: 2px solid rgba(255,255,255,.25); pointer-events: auto; touch-action: none; }
+#mobile { position: fixed; z-index: 15; inset: 0; pointer-events: none; }
+#lookZone { position: absolute; z-index: 1; right: 0; top: 0; width: 62%; height: 100%; pointer-events: auto; touch-action: none; }
+#lookHint { position: absolute; z-index: 2; right: 20px; top: 48%; transform: translateY(-50%); padding: 8px 11px; border-radius: 9px; background: rgba(15,23,42,.55); color: rgba(255,255,255,.9); font-size: 13px; pointer-events: none; }
+#joystick { position: absolute; z-index: 3; left: max(22px, env(safe-area-inset-left)); bottom: calc(max(26px, env(safe-area-inset-bottom)) + 2px); width: 120px; height: 120px; border-radius: 50%; background: rgba(15,23,42,.38); border: 2px solid rgba(255,255,255,.25); pointer-events: auto; touch-action: none; }
 #stick { position: absolute; left: 35px; top: 35px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.6); }
-.mobile-actions { position: absolute; z-index: 3; right: 18px; bottom: 24px; display: grid; grid-template-columns: repeat(2, 78px); gap: 8px; pointer-events: auto; }
+.mobile-actions { position: absolute; z-index: 3; right: max(18px, env(safe-area-inset-right)); bottom: calc(max(24px, env(safe-area-inset-bottom)) + 2px); display: grid; grid-template-columns: repeat(2, 78px); gap: 8px; pointer-events: auto; }
 .mobile-actions button:first-child { grid-column: 1 / -1; }
-@media (max-width: 700px), (pointer: coarse) {
+#fullscreenBtn { position: absolute; z-index: 4; right: max(14px, env(safe-area-inset-right)); top: calc(max(58px, env(safe-area-inset-top)) + 10px); pointer-events: auto; padding: 9px 12px; background: rgba(15,23,42,.78); color: white; }
+
+@media (pointer: coarse) {
+  #desktopHint { display: none !important; }
   #mobile:not(.hidden) { display: block; }
-  #hotbar { bottom: 158px; }
-  .slot { width: 44px; height: 44px; }
-  .swatch { width: 24px; height: 24px; }
+  #hotbar { bottom: calc(max(158px, env(safe-area-inset-bottom)) + 4px); }
+  .slot { width: 46px; height: 46px; }
+  .swatch { width: 26px; height: 26px; }
+}
+
+@media (orientation: landscape) and (pointer: coarse) {
+  #hotbar { bottom: max(14px, env(safe-area-inset-bottom)); }
+  #joystick { width: 112px; height: 112px; bottom: max(15px, env(safe-area-inset-bottom)); }
+  #stick { left: 32px; top: 32px; width: 48px; height: 48px; }
+  .mobile-actions { bottom: max(15px, env(safe-area-inset-bottom)); }
+  #lookHint { display: none; }
+  #fullscreenBtn { top: max(54px, env(safe-area-inset-top)); }
+}
+
+@media (orientation: portrait) and (pointer: coarse) {
+  #hotbar { bottom: calc(max(170px, env(safe-area-inset-bottom)) + 4px); }
+  #lookZone { width: 70%; }
 }
