@@ -26,7 +26,7 @@ small { display: block; color: #94a3b8; line-height: 1.45; margin-top: 14px; }
 #roomBadge { left: 12px; }
 #playersBadge { right: 12px; }
 #crosshair { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font: 28px/1 monospace; text-shadow: 0 1px 4px black; }
-#unlockBtn { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); pointer-events: auto; }
+#desktopHint { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); padding: 10px 14px; border-radius: 9px; background: rgba(15,23,42,.82); color: white; pointer-events: none; }
 #hotbar { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 7px; }
 .slot { width: 54px; height: 54px; border: 3px solid rgba(255,255,255,.55); border-radius: 8px; background: rgba(15,23,42,.75); display: grid; place-items: center; font-weight: 900; }
 .slot.selected { border-color: white; transform: translateY(-5px); }
@@ -34,9 +34,11 @@ small { display: block; color: #94a3b8; line-height: 1.45; margin-top: 14px; }
 #toast { position: fixed; z-index: 30; top: 70px; left: 50%; transform: translateX(-50%); padding: 10px 14px; background: rgba(15,23,42,.9); border-radius: 9px; opacity: 0; transition: opacity .2s; pointer-events: none; }
 #toast.show { opacity: 1; }
 #mobile { position: fixed; z-index: 11; inset: 0; pointer-events: none; }
-#joystick { position: absolute; left: 22px; bottom: 26px; width: 120px; height: 120px; border-radius: 50%; background: rgba(15,23,42,.38); border: 2px solid rgba(255,255,255,.25); pointer-events: auto; touch-action: none; }
+#lookZone { position: absolute; z-index: 1; right: 0; top: 0; width: 58%; height: 100%; pointer-events: auto; touch-action: none; }
+#lookHint { position: absolute; z-index: 2; right: 20px; top: 50%; transform: translateY(-50%); padding: 8px 11px; border-radius: 9px; background: rgba(15,23,42,.55); color: rgba(255,255,255,.9); font-size: 13px; pointer-events: none; }
+#joystick { position: absolute; z-index: 3; left: 22px; bottom: 26px; width: 120px; height: 120px; border-radius: 50%; background: rgba(15,23,42,.38); border: 2px solid rgba(255,255,255,.25); pointer-events: auto; touch-action: none; }
 #stick { position: absolute; left: 35px; top: 35px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.6); }
-.mobile-actions { position: absolute; right: 18px; bottom: 24px; display: grid; grid-template-columns: repeat(2, 78px); gap: 8px; pointer-events: auto; }
+.mobile-actions { position: absolute; z-index: 3; right: 18px; bottom: 24px; display: grid; grid-template-columns: repeat(2, 78px); gap: 8px; pointer-events: auto; }
 .mobile-actions button:first-child { grid-column: 1 / -1; }
 @media (max-width: 700px), (pointer: coarse) {
   #mobile:not(.hidden) { display: block; }

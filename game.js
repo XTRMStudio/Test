@@ -21,6 +21,7 @@ const status = $('menuStatus');
 const roomBadge = $('roomBadge');
 const playersBadge = $('playersBadge');
 const toastEl = $('toast');
+const isTouchDevice = matchMedia('(pointer: coarse)').matches;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87c9ff);
@@ -89,7 +90,13 @@ function cleanName() { return ($('playerName').value.trim() || 'Builder').slice(
 
 function startGame(label) {
   started = true; menu.classList.add('hidden'); hud.classList.remove('hidden');
-  if (matchMedia('(pointer: coarse)').matches) mobile.classList.remove('hidden');
+  if (isTouchDevice) {
+    mobile.classList.remove('hidden');
+  } else {
+    // Pointer lock must be requested from a user action. Solo normally locks
+    // immediately; hosted/joined games can still be clicked once as fallback.
+    try { controls.lock(); } catch (_) {}
+  }
   roomBadge.textContent = label; updatePlayerCount();
   buildHotbar();
 }
@@ -160,9 +167,9 @@ function removeRemote(id) { const p=remotePlayers.get(id); if(p){scene.remove(p.
 const keys={};
 addEventListener('keydown',e=>{ keys[e.code]=true; if (/^Digit[1-5]$/.test(e.code)){selectedBlock=Number(e.code.at(-1))-1;buildHotbar();} });
 addEventListener('keyup',e=>keys[e.code]=false);
-controls.addEventListener('lock',()=> $('unlockBtn').classList.add('hidden'));
-controls.addEventListener('unlock',()=> $('unlockBtn').classList.remove('hidden'));
-$('unlockBtn').onclick=()=>controls.lock();
+controls.addEventListener('lock',()=> $('desktopHint').classList.add('hidden'));
+controls.addEventListener('unlock',()=> { if (started && !isTouchDevice) $('desktopHint').classList.remove('hidden'); });
+canvas.addEventListener('click',()=> { if (started && !isTouchDevice && !controls.isLocked) controls.lock(); });
 canvas.addEventListener('contextmenu',e=>e.preventDefault());
 canvas.addEventListener('mousedown',e=>{ if(!controls.isLocked)return; if(e.button===0) interact(false); if(e.button===2) interact(true); });
 
@@ -204,9 +211,22 @@ function setupMobile(){
   joy.addEventListener('pointermove',e=>{if(!joy.hasPointerCapture(e.pointerId))return;const r=joy.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),m=Math.min(38,Math.hypot(x,y)),a=Math.atan2(y,x);mobileMove={x:Math.cos(a)*m/38,y:Math.sin(a)*m/38};stick.style.transform=`translate(${mobileMove.x*35}px,${mobileMove.y*35}px)`;});
   joy.addEventListener('pointerup',reset); joy.addEventListener('pointercancel',reset);
   $('jumpBtn').onclick=()=>keys.__jump=true; $('breakBtn').onclick=()=>interact(false); $('placeBtn').onclick=()=>interact(true);
-  canvas.addEventListener('touchstart',e=>{if(e.touches.length===1)touchLook={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
-  canvas.addEventListener('touchmove',e=>{if(!touchLook||e.touches.length!==1)return;const t=e.touches[0],dx=t.clientX-touchLook.x,dy=t.clientY-touchLook.y;controls.object.rotation.y-=dx*.004;camera.rotation.x=Math.max(-1.45,Math.min(1.45,camera.rotation.x-dy*.004));touchLook={x:t.clientX,y:t.clientY};},{passive:true});
-  canvas.addEventListener('touchend',()=>touchLook=null,{passive:true});
+  const lookZone=$('lookZone');
+  lookZone.addEventListener('pointerdown',e=>{
+    lookZone.setPointerCapture(e.pointerId);
+    touchLook={x:e.clientX,y:e.clientY,id:e.pointerId};
+    $('lookHint').classList.add('hidden');
+  });
+  lookZone.addEventListener('pointermove',e=>{
+    if(!touchLook || touchLook.id!==e.pointerId || !lookZone.hasPointerCapture(e.pointerId))return;
+    const dx=e.clientX-touchLook.x,dy=e.clientY-touchLook.y;
+    controls.object.rotation.y-=dx*.0045;
+    camera.rotation.x=Math.max(-1.45,Math.min(1.45,camera.rotation.x-dy*.0045));
+    touchLook={x:e.clientX,y:e.clientY,id:e.pointerId};
+  });
+  const stopLook=e=>{if(touchLook?.id===e.pointerId)touchLook=null;};
+  lookZone.addEventListener('pointerup',stopLook);
+  lookZone.addEventListener('pointercancel',stopLook);
 }
 setupMobile();
 
