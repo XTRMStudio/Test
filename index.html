@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>BlockWorld Multiplayer</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+</head>
+<body>
+  <div id="menu" class="panel">
+    <h1>BlockWorld</h1>
+    <p>A small multiplayer block-building game.</p>
+    <label>Player name<input id="playerName" maxlength="16" value="Builder" /></label>
+    <div class="menu-buttons">
+      <button id="soloBtn">Play solo</button>
+      <button id="hostBtn">Create room</button>
+    </div>
+    <div class="join-row">
+      <input id="roomInput" maxlength="36" placeholder="Room code" />
+      <button id="joinBtn">Join room</button>
+    </div>
+    <p id="menuStatus" class="status"></p>
+    <small>Desktop: WASD, Space, mouse. Left click breaks, right click places, 1–5 changes block.</small>
+  </div>
+
+  <div id="hud" class="hidden">
+    <div id="roomBadge">Solo</div>
+    <div id="playersBadge">Players: 1</div>
+    <div id="crosshair">+</div>
+    <div id="hotbar"></div>
+    <button id="unlockBtn">Click to play</button>
+  </div>
+
+  <div id="mobile" class="hidden">
+    <div id="joystick"><div id="stick"></div></div>
+    <div class="mobile-actions">
+      <button id="jumpBtn">Jump</button>
+      <button id="breakBtn">Break</button>
+      <button id="placeBtn">Place</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <canvas id="game"></canvas>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
